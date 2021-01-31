@@ -29,6 +29,7 @@ jobs:
 
     - name: Test Remote Env
       run: |
+        go mod download
         go test -v -run ^TestRemoteEnv$ towelong/mogu/test
         go test -v -run ^TestTime$ towelong/mogu/test
 

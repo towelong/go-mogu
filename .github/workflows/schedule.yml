@@ -19,4 +19,5 @@ jobs:
 
       - name: Run App
         run: |
+          go mod download
           go run main.go

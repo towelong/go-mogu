@@ -28,4 +28,7 @@ jobs:
         go-version: 1.15
 
     - name: Test Remote Env
-      run: go test -v -run ^TestRemoteEnv$ towelong/mogu/test
+      run: |
+        go test -v -run ^TestRemoteEnv$ towelong/mogu/test
+        go test -v -run ^TestTime$ towelong/mogu/test
+

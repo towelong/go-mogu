@@ -113,7 +113,7 @@ func (m moGuService) SignIn(token, planID string) bool {
 		log.Fatal("failed to Load secret ")
 	}
 	// I will go off work at 18:00
-	if time.Now().Hour() > 18 {
+	if time.Now().Hour() >= 12 {
 		// go off work sign
 		types = "END"
 	}

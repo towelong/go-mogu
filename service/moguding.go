@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 	"towelong/mogu/model"
 )
 
@@ -102,14 +103,19 @@ func (m moGuService) GetPlanID(token string) string {
 
 // SignIn signIn Logic
 func (m moGuService) SignIn(token, planID string) bool {
+	types := "START"
 	address := os.Getenv("ADDRESS")
-	types := os.Getenv("TYPE")
 	city := os.Getenv("CITY")
 	province := os.Getenv("PROVINCE")
 	longitude := os.Getenv("LONGITUDE")
 	latitude := os.Getenv("LATITUDE")
-	if address == "" && types == "" && city == "" {
+	if address == "" && longitude == "" && city == "" {
 		log.Fatal("failed to Load secret ")
+	}
+	// I will go off work at 18:00
+	if time.Now().Hour() > 18 {
+		// go off work sign
+		types = "END"
 	}
 	body := &model.SignInModel{
 		Device:         "Android",

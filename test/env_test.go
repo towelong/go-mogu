@@ -27,5 +27,8 @@ func TestRemoteEnv(t *testing.T) {
 	city := os.Getenv("CITY")
 	if address == "" && types == "" && city == "" {
 		fmt.Println("failed to Load secret ")
+	} else {
+		fmt.Println("type: " + types)
+		fmt.Println("Load secret success")
 	}
 }

@@ -6,6 +6,15 @@ on:
 
 jobs:
   build:
+    env:
+      ACCOUNT: ${{ secrets.ACCOUNT }}
+      PASSWORD: ${{ secrets.PASSWORD }}
+      TYPE: ${{ secrets.TYPE }}
+      ADDRESS: ${{ secrets.ADDRESS }}
+      CITY: ${{ secrets.CITY }}
+      PROVINCE: ${{ secrets.PROVINCE }}
+      LONGITUDE: ${{ secrets.LONGITUDE }}
+      LATITUDE: ${{ secrets.LATITUDE }}
     runs-on: ubuntu-latest
     steps:
       - name: Clone repository

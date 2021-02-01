@@ -15,6 +15,7 @@ func TestLocalEnv(t *testing.T) {
 		fmt.Println(os.Getenv("ACCOUNT"))
 		fmt.Println(os.Getenv("PASSWORD"))
 		fmt.Println(os.Getenv("ADDRESS"))
+		fmt.Println(os.Getenv("KEY"))
 	} else {
 		fmt.Println("环境变量读取失败")
 	}
@@ -24,7 +25,8 @@ func TestLocalEnv(t *testing.T) {
 func TestRemoteEnv(t *testing.T) {
 	address := os.Getenv("ADDRESS")
 	city := os.Getenv("CITY")
-	if address == "" && city == "" {
+	key := os.Getenv("KEY")
+	if address == "" && city == "" && key == "" {
 		fmt.Println("failed to Load secret ")
 	} else {
 		fmt.Println("Load secret success")

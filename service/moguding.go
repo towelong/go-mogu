@@ -103,20 +103,26 @@ func (m moGuService) GetPlanID(token string) string {
 
 // SignIn signIn Logic
 func (m moGuService) SignIn(token, planID string) bool {
-	types := "START"
+	var types string
 	address := os.Getenv("ADDRESS")
 	city := os.Getenv("CITY")
 	province := os.Getenv("PROVINCE")
 	longitude := os.Getenv("LONGITUDE")
 	latitude := os.Getenv("LATITUDE")
+	times := time.Now().Format("2006年1月2日15:04:05")
+	message := fmt.Sprintf("打卡时间为%v", times)
 	if address == "" && longitude == "" && city == "" {
 		log.Fatal("failed to Load secret ")
 	}
 	utcHour := time.Now().UTC().Hour() + 8
 	// I will go off work at 18:00
-	if utcHour >= 12 && utcHour < 23 {
+	if utcHour >= 12 && utcHour <= 23 {
 		// go off work sign
 		types = "END"
+		SendMessage("下班打卡成功提醒", message)
+	} else {
+		types = "START"
+		SendMessage("上班打卡成功提醒", message)
 	}
 	body := &model.SignInModel{
 		Device:         "Android",

@@ -112,8 +112,9 @@ func (m moGuService) SignIn(token, planID string) bool {
 	if address == "" && longitude == "" && city == "" {
 		log.Fatal("failed to Load secret ")
 	}
+	utcHour := time.Now().UTC().Hour() + 8
 	// I will go off work at 18:00
-	if time.Now().UTC().Hour()+8 >= 12 {
+	if utcHour >= 12 && utcHour < 23 {
 		// go off work sign
 		types = "END"
 	}

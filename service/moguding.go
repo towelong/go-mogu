@@ -103,7 +103,7 @@ func (m moGuService) GetPlanID(token string) string {
 
 // SignIn signIn Logic
 func (m moGuService) SignIn(token, planID string) bool {
-	types := "END"
+	types := "START"
 	address := os.Getenv("ADDRESS")
 	city := os.Getenv("CITY")
 	province := os.Getenv("PROVINCE")
@@ -113,7 +113,7 @@ func (m moGuService) SignIn(token, planID string) bool {
 		log.Fatal("failed to Load secret ")
 	}
 	// I will go off work at 18:00
-	if time.Now().Hour() >= 10 {
+	if time.Now().Hour()+8 >= 12 {
 		// go off work sign
 		types = "END"
 	}

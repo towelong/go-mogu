@@ -31,5 +31,5 @@ jobs:
       run: |
         go mod download
         go test -v -run ^TestRemoteEnv$ towelong/mogu/test
-        go test -v -run ^TestTime$ towelong/mogu/test
+        go test -v -run ^TestRemoteTime$ towelong/mogu/test
 

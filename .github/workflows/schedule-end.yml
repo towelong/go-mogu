@@ -2,7 +2,7 @@ name: schedule-end
 
 on:
   schedule:
-    - cron: "0 2 * * *"
+    - cron: "6 2 * * *"
 
 jobs:
   build:

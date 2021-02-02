@@ -12,7 +12,7 @@ jobs:
     env:
       ACCOUNT: ${{ secrets.ACCOUNT }}
       PASSWORD: ${{ secrets.PASSWORD }}
-      TYPE: ${{ secrets.TYPE }}
+      KEY: ${{ secrets.KEY }}
       ADDRESS: ${{ secrets.ADDRESS }}
       CITY: ${{ secrets.CITY }}
       PROVINCE: ${{ secrets.PROVINCE }}

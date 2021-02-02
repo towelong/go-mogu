@@ -3,15 +3,19 @@ package test
 import (
 	"fmt"
 	"testing"
-	"time"
 	"towelong/mogu/service"
+	"towelong/mogu/utils"
 
 	"github.com/joho/godotenv"
 )
 
 func TestFT(t *testing.T) {
 	godotenv.Load("../.env")
-	times := time.Now().Format("2006年1月2日15:04:05")
-	message := fmt.Sprintf("打卡时间为%v", times)
-	service.SendMessage("上班打卡成功提醒", message)
+	types := utils.TimePicker()
+	title, message := utils.EnumToMsg(types)
+	b := service.SendMessage(title, message)
+	if b {
+		fmt.Println("Push Success!")
+	}
+	fmt.Println(b)
 }

@@ -8,9 +8,8 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
-	"time"
 	"towelong/mogu/model"
+	"towelong/mogu/utils"
 )
 
 const (
@@ -21,7 +20,7 @@ const (
 type MoGuService interface {
 	MoGuLogin(account, password string) string
 	GetPlanID(token string) string
-	SignIn(token, planID string) bool
+	SignIn(token, planID string) (bool, string)
 }
 
 // moGuService is a empty struction, which include a serious of functions.
@@ -102,28 +101,18 @@ func (m moGuService) GetPlanID(token string) string {
 }
 
 // SignIn signIn Logic
-func (m moGuService) SignIn(token, planID string) bool {
-	var types string
+func (m moGuService) SignIn(token, planID string) (bool, string) {
 	address := os.Getenv("ADDRESS")
 	city := os.Getenv("CITY")
 	province := os.Getenv("PROVINCE")
 	longitude := os.Getenv("LONGITUDE")
 	latitude := os.Getenv("LATITUDE")
-	times := time.Now().Format("2006年1月2日15:04:05")
-	message := fmt.Sprintf("打卡时间为%v", times)
 	if address == "" && longitude == "" && city == "" {
 		log.Fatal("failed to Load secret ")
 	}
-	utcHour := time.Now().UTC().Hour() + 8
-	// I will go off work at 18:00
-	if utcHour >= 12 && utcHour <= 23 {
-		// go off work sign
-		types = "END"
-		SendMessage("下班打卡成功提醒", message)
-	} else {
-		types = "START"
-		SendMessage("上班打卡成功提醒", message)
-	}
+	// 自动计算 上午 or 下午
+	// 上午为 上班打卡;下午为 下班打卡
+	types := utils.TimePicker()
 	body := &model.SignInModel{
 		Device:         "Android",
 		PlanID:         planID,
@@ -154,11 +143,11 @@ func (m moGuService) SignIn(token, planID string) bool {
 			result, _ := ioutil.ReadAll(resp.Body)
 			var data map[string]interface{}
 			json.Unmarshal(result, &data)
-			if strings.EqualFold(data["msg"].(string), "success") {
-				return true
+			if data["code"].(float64) == 200 {
+				return true, types
 			}
 			fmt.Println(data["msg"])
 		}
 	}
-	return false
+	return false, utils.ERROR
 }

@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"towelong/mogu/service"
+	"towelong/mogu/utils"
 
 	"github.com/joho/godotenv"
 )
@@ -14,8 +16,12 @@ func main() {
 	moguding := service.NewMoGuService()
 	token := moguding.MoGuLogin(os.Getenv("ACCOUNT"), os.Getenv("PASSWORD"))
 	planID := moguding.GetPlanID(token)
-	isSuccess := moguding.SignIn(token, planID)
-	if isSuccess {
-		fmt.Println("打卡成功")
+	isSuccess, types := moguding.SignIn(token, planID)
+	title, message := utils.EnumToMsg(types)
+	if !isSuccess {
+		service.SendMessage(title, message)
+		log.Fatal(title)
 	}
+	service.SendMessage(title, message)
+	fmt.Println("打卡成功")
 }

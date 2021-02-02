@@ -1,7 +1,9 @@
 package service
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"os"
 )
@@ -16,10 +18,14 @@ const (
 func SendMessage(text, desp string) bool {
 	secretKey := os.Getenv("KEY")
 	urlStr := fmt.Sprintf(serverChanAPI+"%v.send?text=%v&desp=%v", secretKey, text, desp)
-	fmt.Println(urlStr)
 	if resp, err := http.Get(urlStr); err == nil {
 		defer resp.Body.Close()
-		return true
+		body, _ := ioutil.ReadAll(resp.Body)
+		res := make(map[string]interface{})
+		json.Unmarshal(body, &res)
+		if res["errno"].(float64) == 0 {
+			return true
+		}
 	}
 	return false
 }

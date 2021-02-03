@@ -50,3 +50,30 @@ type SignInModel struct {
 	// 市
 	Province string `json:"province"`
 }
+
+// WeekWriterModel Weekly Diary form
+type WeekWriterModel struct {
+	AttachmentList []string `json:"attachmentList"`
+	Attachments    string   `json:"attachments"`
+	// 周报内容
+	Content string `json:"content"`
+	PlanID  string `json:"planId"`
+	// 周报类型
+	ReportType string `json:"reportType"`
+	// 周报标题
+	Title string `json:"title"`
+	// 第 X 周
+	Weeks string `json:"weeks"`
+	// 当前周开始时间
+	StartTime string `json:"startTime"`
+	// 当前周结束时间
+	EndTime string `json:"endTime"`
+}
+
+// SentenceModel init data
+type SentenceModel struct {
+	Code string `json:"code"`
+	Data []struct {
+		Text string `json:"text"`
+	} `json:"data"`
+}

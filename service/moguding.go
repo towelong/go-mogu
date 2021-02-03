@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 	"towelong/mogu/model"
 	"towelong/mogu/utils"
 )
@@ -21,6 +22,7 @@ type MoGuService interface {
 	MoGuLogin(account, password string) string
 	GetPlanID(token string) string
 	SignIn(token, planID string) (bool, string)
+	WeeklyDiary(token, planID string) (bool, string)
 }
 
 // moGuService is a empty struction, which include a serious of functions.
@@ -147,6 +149,52 @@ func (m moGuService) SignIn(token, planID string) (bool, string) {
 				return true, types
 			}
 			fmt.Println(data["msg"])
+		}
+	}
+	return false, utils.ERROR
+}
+
+// WeeklyDiary it will be automatic writing weekly diary.
+func (m moGuService) WeeklyDiary(token, planID string) (bool, string) {
+	if time.Now().Weekday() != time.Saturday {
+		return false, utils.NOWEEK
+	}
+	currentWeek, startTime, endTime := utils.WeeklyPicker(time.Now())
+	body := &model.WeekWriterModel{
+		AttachmentList: []string{},
+		Attachments:    "",
+		PlanID:         planID,
+		ReportType:     "week",
+		Title:          fmt.Sprintf("第%v周周报", currentWeek),
+		Content:        utils.RandomSentence(),
+		Weeks:          fmt.Sprintf("第%v周", currentWeek),
+		StartTime:      startTime,
+		EndTime:        endTime,
+	}
+	client := &http.Client{}
+	form, _ := json.Marshal(body)
+	request, err := http.NewRequest(
+		"POST",
+		url+"/practice/paper/v1/save",
+		bytes.NewReader(form),
+	)
+	if err == nil {
+		request.Header.Add("user-agent", "Mozilla/5.0 (Linux; U; Android 9; zh-cn; ONEPLUS A6010 Build/PKQ1.180716.001) AppleWebKit/533.1 (KHTML, like Gecko) Version/5.0 Mobile Safari/533.1")
+		request.Header.Add("content-type", "application/json; charset=UTF-8")
+		request.Header.Add("Authorization", token)
+		resp, error := client.Do(request)
+		if error == nil {
+			defer resp.Body.Close()
+			result, _ := ioutil.ReadAll(resp.Body)
+			var data map[string]interface{}
+			json.Unmarshal(result, &data)
+			if data["code"].(float64) == 200 {
+				return true, utils.WEEK
+			}
+			if data["code"].(float64) == 500 {
+				fmt.Println(data["msg"])
+				return false, utils.NOWEEK
+			}
 		}
 	}
 	return false, utils.ERROR

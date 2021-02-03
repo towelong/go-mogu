@@ -18,6 +18,12 @@ func TestTime(t *testing.T) {
 	fmt.Println(types)
 }
 
+func TestWeek(t *testing.T) {
+	utils.WeeklyPicker(time.Now())
+	
+	fmt.Println(utils.RandomSentence())
+}
+
 func TestRemoteTime(t *testing.T) {
 	fmt.Println("local time:")
 	fmt.Println(time.Now().Format("2006/1/2 15:04:05"))

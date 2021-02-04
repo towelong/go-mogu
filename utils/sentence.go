@@ -2,6 +2,7 @@ package utils
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"math/rand"
 	"time"
@@ -14,6 +15,7 @@ func RandomSentence() string {
 	var sentence model.SentenceModel
 	data, _ := ioutil.ReadFile("../model/sentence.json")
 	json.Unmarshal([]byte(data), &sentence)
+	fmt.Println(len(sentence.Data))
 	r := rand.Intn(len(sentence.Data))
 	str := sentence.Data[r].Text
 	return str

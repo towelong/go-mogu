@@ -31,9 +31,9 @@ func main() {
 	headline, msg := utils.EnumToMsg(weekType)
 	if !isTrue && weekType == utils.NOWEEK {
 		fmt.Println(msg)
+	} else {
+		if service.SendMessage(headline, msg) {
+			fmt.Println("打卡成功")
+		}
 	}
-	if service.SendMessage(headline, msg) {
-		fmt.Println("打卡成功")
-	}
-	fmt.Println("Warn: ServerChan不工作了~")
 }

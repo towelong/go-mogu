@@ -156,8 +156,12 @@ func (m moGuService) SignIn(token, planID string) (bool, string) {
 
 // WeeklyDiary it will be automatic writing weekly diary.
 func (m moGuService) WeeklyDiary(token, planID string) (bool, string) {
-	if time.Now().Weekday() != time.Saturday && utils.TimePicker() == utils.END {
+	if time.Now().Weekday() != time.Saturday && utils.TimePicker() != utils.END {
 		return false, utils.NOWEEK
+	}
+	sentence, randomErr := utils.RandomSentence()
+	if randomErr != nil {
+		log.Fatal(randomErr)
 	}
 	currentWeek, startTime, endTime := utils.WeeklyPicker(time.Now())
 	body := &model.WeekWriterModel{
@@ -166,7 +170,7 @@ func (m moGuService) WeeklyDiary(token, planID string) (bool, string) {
 		PlanID:         planID,
 		ReportType:     "week",
 		Title:          fmt.Sprintf("第%v周周报", currentWeek),
-		Content:        utils.RandomSentence(),
+		Content:        sentence,
 		Weeks:          fmt.Sprintf("第%v周", currentWeek),
 		StartTime:      startTime,
 		EndTime:        endTime,

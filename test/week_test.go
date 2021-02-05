@@ -9,7 +9,6 @@ import (
 	"github.com/joho/godotenv"
 )
 
-//
 func TestWeekDiary(t *testing.T) {
 	godotenv.Load("../.env")
 	moguding := service.NewMoGuService()

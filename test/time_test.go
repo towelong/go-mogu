@@ -20,7 +20,6 @@ func TestTime(t *testing.T) {
 
 func TestWeek(t *testing.T) {
 	utils.WeeklyPicker(time.Now())
-	
 	fmt.Println(utils.RandomSentence())
 }
 

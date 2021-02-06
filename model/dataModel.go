@@ -72,7 +72,7 @@ type WeekWriterModel struct {
 
 // SentenceModel init data
 type SentenceModel struct {
-	Code string `json:"code"`
+	Code int `json:"code"`
 	Data []struct {
 		Text string `json:"text"`
 	} `json:"data"`

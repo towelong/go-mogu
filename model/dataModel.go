@@ -3,11 +3,11 @@ package model
 // DataModel is used to reflect data
 type DataModel struct {
 	Code int  `json:"code"`
-	Data Data `json:"data"`
+	Data data `json:"data"`
 }
 
 // Data is used reflect data to dataDodel
-type Data struct {
+type data struct {
 	NiKeName string `json:"nikeName"`
 	UserID   string `json:"userId"`
 	Token    string `json:"token"`
@@ -16,11 +16,11 @@ type Data struct {
 // PlanModel return Object
 type PlanModel struct {
 	Code int    `json:"code"`
-	Data []Plan `json:"data"`
+	Data []plan `json:"data"`
 }
 
 // Plan Object
-type Plan struct {
+type plan struct {
 	PlanID   string `json:"planId"`
 	PlanName string `json:"planName"`
 }
@@ -72,8 +72,10 @@ type WeekWriterModel struct {
 
 // SentenceModel init data
 type SentenceModel struct {
-	Code int `json:"code"`
-	Data []struct {
-		Text string `json:"text"`
-	} `json:"data"`
+	Code int    `json:"code"`
+	Data []text `json:"data"`
+}
+
+type text struct {
+	Text string `json:"text"`
 }

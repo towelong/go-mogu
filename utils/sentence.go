@@ -7,6 +7,8 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"os"
+	"path"
+	"path/filepath"
 	"time"
 	"towelong/mogu/model"
 )
@@ -15,13 +17,16 @@ import (
 func RandomSentence() (string, error) {
 	rand.Seed(time.Now().UnixNano())
 	var sentence model.SentenceModel
-	file, _ := os.Open("../model/sentence.json")
-	defer file.Close()
-	data, err := ioutil.ReadAll(file)
+	abs, _ := os.Getwd()
+	dir := filepath.Dir(abs)
+	fmt.Println(dir)
+	path1 := path.Join(dir, "/model/sentence.json")
+	fmt.Println(path1)
+	file, err := ioutil.ReadFile(path1)
 	if err != nil {
 		return "", err
 	}
-	jsonError := json.Unmarshal([]byte(data), &sentence)
+	jsonError := json.Unmarshal([]byte(file), &sentence)
 	if jsonError != nil {
 		return "", errors.New("JSON转换异常")
 	}

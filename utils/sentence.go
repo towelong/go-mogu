@@ -20,9 +20,9 @@ func RandomSentence() (string, error) {
 	abs, _ := os.Getwd()
 	dir := filepath.Dir(abs)
 	fmt.Println(dir)
-	path1 := path.Join(dir, "/model/sentence.json")
-	fmt.Println(path1)
-	file, err := ioutil.ReadFile(path1)
+	absPath := path.Join(dir, "/model/sentence.json")
+	fmt.Println(absPath)
+	file, err := ioutil.ReadFile(absPath)
 	if err != nil {
 		return "", err
 	}

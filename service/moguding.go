@@ -156,9 +156,9 @@ func (m moGuService) SignIn(token, planID string) (bool, string) {
 
 // WeeklyDiary it will be automatic writing weekly diary.
 func (m moGuService) WeeklyDiary(token, planID string) (bool, string) {
-	if time.Now().UTC().Weekday() != time.Saturday && utils.TimePicker() != utils.END {
-		return false, utils.NOWEEK
-	}
+	// if time.Now().UTC().Weekday() != time.Saturday && utils.TimePicker() != utils.END {
+	// 	return false, utils.NOWEEK
+	// }
 	sentence, randomErr := utils.RandomSentence()
 	fmt.Println(sentence)
 	if randomErr != nil {

@@ -32,6 +32,8 @@ jobs:
         go mod download
         go build -o mogu
         ls
+        cd model
+        ls
         ./mogu
         go test -v -run ^TestRemoteEnv$ towelong/mogu/test
         go test -v -run ^TestRemoteTime$ towelong/mogu/test

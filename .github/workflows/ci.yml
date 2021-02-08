@@ -30,7 +30,8 @@ jobs:
     - name: Test Unit
       run: |
         go mod download
-        go build mogu
+        go build -o mogu
+        ./mogu
         go test -v -run ^TestRemoteEnv$ towelong/mogu/test
         go test -v -run ^TestRemoteTime$ towelong/mogu/test
         go test -count=1 -v -run ^TestWeek$ towelong/mogu/test

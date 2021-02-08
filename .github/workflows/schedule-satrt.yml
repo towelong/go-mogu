@@ -29,5 +29,5 @@ jobs:
       - name: Run App
         run: |
           go mod download
-          go build mogu
+          go build -o mogu
           ./mogu

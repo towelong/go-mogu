@@ -30,10 +30,7 @@ jobs:
     - name: Test Unit
       run: |
         go mod download
-        go build -o mogu
-        cd model
-        ls
-        cat sentence.json
+        go run main.go
         go test -v -run ^TestRemoteEnv$ towelong/mogu/test
         go test -v -run ^TestRemoteTime$ towelong/mogu/test
         go test -count=1 -v -run ^TestWeek$ towelong/mogu/test

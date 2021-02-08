@@ -3,12 +3,9 @@ package utils
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"math/rand"
-	"os"
-	"path"
-	"path/filepath"
+	"net/http"
 	"time"
 	"towelong/mogu/model"
 )
@@ -17,20 +14,13 @@ import (
 func RandomSentence() (string, error) {
 	rand.Seed(time.Now().UnixNano())
 	var sentence model.SentenceModel
-	abs, _ := os.Getwd()
-	dir := filepath.Dir(abs)
-	fmt.Println(dir)
-	absPath := path.Join(dir, "/model/sentence.json")
-	fmt.Println(absPath)
-	file, err := ioutil.ReadFile(absPath)
+	resp, err := http.Get("https://raw.githubusercontent.com/ToWeLong/go-mogu/main/model/sentence.json")
 	if err != nil {
 		return "", err
 	}
-	jsonError := json.Unmarshal([]byte(file), &sentence)
-	if jsonError != nil {
-		return "", errors.New("JSON转换异常")
-	}
-	fmt.Println(len(sentence.Data))
+	defer resp.Body.Close()
+	res, _ := ioutil.ReadAll(resp.Body)
+	json.Unmarshal(res, &sentence)
 	if len(sentence.Data) == 0 {
 		return "", errors.New("数据总数为0")
 	}

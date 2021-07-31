@@ -36,7 +36,7 @@ type SignInModel struct {
 	// default: NORMAL
 	State string `json:"state"`
 	// default:""
-	AttendanceType string `json:"attendanceType"`
+	Description string `json:"description"`
 	// address
 	Address string `json:"address"`
 	// "go to work"：START or "go off work":END

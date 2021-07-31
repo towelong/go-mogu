@@ -54,15 +54,15 @@ func (m moGuService) MoGuLogin(account, password string) string {
 	)
 	if err == nil {
 		request.Header.Add("accept-language", "zh-CN,zh;q=0.8")
-		request.Header.Add("user-agent", "Mozilla/5.0 (Linux; U; Android 9; zh-cn; ONEPLUS A6010 Build/PKQ1.180716.001) AppleWebKit/533.1 (KHTML, like Gecko) Version/5.0 Mobile Safari/533.1")
+		request.Header.Add("user-agent", "Mozilla/5.0 (Linux; U; Android 4.4.2; en-us; Android SDK built for x86 Build/KK) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30")
 		request.Header.Add("content-type", "application/json; charset=UTF-8")
 		request.Header.Add("cache-control", "no-cache")
-		resp, error := client.Do(request)
-		if error == nil {
+		resp, err := client.Do(request)
+		if err == nil {
 			defer resp.Body.Close()
 			result, _ := ioutil.ReadAll(resp.Body)
 			var data model.DataModel
-			json.Unmarshal(result, &data)
+			_ = json.Unmarshal(result, &data)
 			if data.Code == 200 {
 				return data.Data.Token
 			}
@@ -71,29 +71,30 @@ func (m moGuService) MoGuLogin(account, password string) string {
 	return ""
 }
 
-// getPlanID get task id
+// GetPlanID getPlanID get task id
 func (m moGuService) GetPlanID(token string) string {
-	body := map[string]string{
-		"paramsType": "student",
+	body := map[string]int{
+		"state": 1,
 	}
 	client := &http.Client{}
 	form, _ := json.Marshal(body)
 	request, err := http.NewRequest(
 		"POST",
-		url+"/practice/plan/v1/getPlanByStu",
+		url+"/practice/plan/v3/getPlanByStu",
 		bytes.NewReader(form),
 	)
 	if err == nil {
 		request.Header.Add("user-agent", "Mozilla/5.0 (Linux; U; Android 9; zh-cn; ONEPLUS A6010 Build/PKQ1.180716.001) AppleWebKit/533.1 (KHTML, like Gecko) Version/5.0 Mobile Safari/533.1")
 		request.Header.Add("content-type", "application/json; charset=UTF-8")
-		request.Header.Add("Authorization", token)
-		request.Header.Add("roleKey", "student")
-		resp, error := client.Do(request)
-		if error == nil {
+		request.Header.Add("authorization", token)
+		request.Header.Add("rolekey", "student")
+		request.Header.Add("sign", os.Getenv("SIGN"))
+		resp, err := client.Do(request)
+		if err == nil {
 			defer resp.Body.Close()
 			result, _ := ioutil.ReadAll(resp.Body)
 			var data model.PlanModel
-			json.Unmarshal(result, &data)
+			_ = json.Unmarshal(result, &data)
 			if data.Code == 200 {
 				return data.Data[0].PlanID
 			}
@@ -116,35 +117,35 @@ func (m moGuService) SignIn(token, planID string) (bool, string) {
 	// 上午为 上班打卡;下午为 下班打卡
 	types := utils.TimePicker()
 	body := &model.SignInModel{
-		Device:         "Android",
-		PlanID:         planID,
-		Country:        "中国",
-		Type:           types, // 默认打卡上班
-		AttendanceType: "",
-		State:          "NORMAL",
-		Address:        address,
-		Longitude:      longitude,
-		Latitude:       latitude,
-		City:           city,
-		Province:       province,
+		Device:      "Android",
+		PlanID:      planID,
+		Country:     "中国",
+		Type:        types, // 默认打卡上班
+		Description: "",
+		State:       "NORMAL",
+		Address:     address,
+		Longitude:   longitude,
+		Latitude:    latitude,
+		City:        city,
+		Province:    province,
 	}
 	client := &http.Client{}
 	form, _ := json.Marshal(body)
 	request, err := http.NewRequest(
 		"POST",
-		url+"/attendence/clock/v1/save",
+		url+"/attendence/clock/v2/save",
 		bytes.NewReader(form),
 	)
 	if err == nil {
 		request.Header.Add("user-agent", "Mozilla/5.0 (Linux; U; Android 9; zh-cn; ONEPLUS A6010 Build/PKQ1.180716.001) AppleWebKit/533.1 (KHTML, like Gecko) Version/5.0 Mobile Safari/533.1")
 		request.Header.Add("content-type", "application/json; charset=UTF-8")
 		request.Header.Add("Authorization", token)
-		resp, error := client.Do(request)
-		if error == nil {
+		resp, err := client.Do(request)
+		if err == nil {
 			defer resp.Body.Close()
 			result, _ := ioutil.ReadAll(resp.Body)
 			var data map[string]interface{}
-			json.Unmarshal(result, &data)
+			_ = json.Unmarshal(result, &data)
 			if data["code"].(float64) == 200 {
 				return true, types
 			}
@@ -187,12 +188,12 @@ func (m moGuService) WeeklyDiary(token, planID string) (bool, string) {
 		request.Header.Add("user-agent", "Mozilla/5.0 (Linux; U; Android 9; zh-cn; ONEPLUS A6010 Build/PKQ1.180716.001) AppleWebKit/533.1 (KHTML, like Gecko) Version/5.0 Mobile Safari/533.1")
 		request.Header.Add("content-type", "application/json; charset=UTF-8")
 		request.Header.Add("Authorization", token)
-		resp, error := client.Do(request)
-		if error == nil {
+		resp, err := client.Do(request)
+		if err == nil {
 			defer resp.Body.Close()
 			result, _ := ioutil.ReadAll(resp.Body)
 			var data map[string]interface{}
-			json.Unmarshal(result, &data)
+			_ = json.Unmarshal(result, &data)
 			if data["code"].(float64) == 200 {
 				return true, utils.WEEK
 			}

@@ -3,6 +3,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=go
 
 ### vscode ###
+.vscode
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json

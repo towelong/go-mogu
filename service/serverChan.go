@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	serverChanAPI = "https://sc.ftqq.com/"
+	serverChanAPI = "https://sctapi.ftqq.com/"
 )
 
 // SendMessage we can use Server Chan to send message.

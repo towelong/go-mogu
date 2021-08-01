@@ -32,7 +32,7 @@ type moGuService struct {
 
 // NewMoGuService init struction.
 func NewMoGuService() MoGuService {
-	return new(moGuService)
+	return &moGuService{}
 }
 
 // MoGuLogin is a login logic of MoGu.

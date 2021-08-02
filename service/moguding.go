@@ -14,14 +14,15 @@ import (
 )
 
 const (
-	url = "https://api.moguding.net:9000"
+	url  = "https://api.moguding.net:9000"
+	salt = "3478cbbc33f84bd00d75d7dfa69e0daa"
 )
 
 // MoGuService generate a serious of function's interfaces.
 type MoGuService interface {
-	MoGuLogin(account, password string) string
-	GetPlanID(token string) string
-	SignIn(token, planID string) (bool, string)
+	MoGuLogin(account, password string) (string, string)
+	GetPlanID(token, userId string) string
+	SignIn(token, planID, userId string) (bool, string)
 	WeeklyDiary(token, planID string) (bool, string)
 }
 
@@ -38,7 +39,7 @@ func NewMoGuService() MoGuService {
 // MoGuLogin is a login logic of MoGu.
 // account: When user register application,it is usually a phone number.
 // password: Create by User
-func (m moGuService) MoGuLogin(account, password string) string {
+func (m moGuService) MoGuLogin(account, password string) (token, userId string) {
 	body := map[string]string{
 		"phone":     account,
 		"password":  password,
@@ -64,15 +65,15 @@ func (m moGuService) MoGuLogin(account, password string) string {
 			var data model.DataModel
 			_ = json.Unmarshal(result, &data)
 			if data.Code == 200 {
-				return data.Data.Token
+				return data.Data.Token, data.Data.UserID
 			}
 		}
 	}
-	return ""
+	return "", ""
 }
 
 // GetPlanID getPlanID get task id
-func (m moGuService) GetPlanID(token string) string {
+func (m moGuService) GetPlanID(token, userId string) string {
 	body := map[string]int{
 		"state": 1,
 	}
@@ -84,11 +85,14 @@ func (m moGuService) GetPlanID(token string) string {
 		bytes.NewReader(form),
 	)
 	if err == nil {
+		// 计算获取实习计划的sign
+		// str = userId + student + salt
+		sign := utils.CreateSign(userId + "student" + salt)
 		request.Header.Add("user-agent", "Mozilla/5.0 (Linux; U; Android 9; zh-cn; ONEPLUS A6010 Build/PKQ1.180716.001) AppleWebKit/533.1 (KHTML, like Gecko) Version/5.0 Mobile Safari/533.1")
 		request.Header.Add("content-type", "application/json; charset=UTF-8")
 		request.Header.Add("authorization", token)
 		request.Header.Add("rolekey", "student")
-		request.Header.Add("sign", os.Getenv("SIGN"))
+		request.Header.Add("sign", sign)
 		resp, err := client.Do(request)
 		if err == nil {
 			defer resp.Body.Close()
@@ -104,7 +108,7 @@ func (m moGuService) GetPlanID(token string) string {
 }
 
 // SignIn signIn Logic
-func (m moGuService) SignIn(token, planID string) (bool, string) {
+func (m moGuService) SignIn(token, planID, userId string) (bool, string) {
 	address := os.Getenv("ADDRESS")
 	city := os.Getenv("CITY")
 	province := os.Getenv("PROVINCE")
@@ -137,9 +141,12 @@ func (m moGuService) SignIn(token, planID string) (bool, string) {
 		bytes.NewReader(form),
 	)
 	if err == nil {
+		str := body.Device + types + planID + userId + body.Address + salt
+		sign := utils.CreateSign(str)
 		request.Header.Add("user-agent", "Mozilla/5.0 (Linux; U; Android 9; zh-cn; ONEPLUS A6010 Build/PKQ1.180716.001) AppleWebKit/533.1 (KHTML, like Gecko) Version/5.0 Mobile Safari/533.1")
 		request.Header.Add("content-type", "application/json; charset=UTF-8")
 		request.Header.Add("Authorization", token)
+		request.Header.Add("sign", sign)
 		resp, err := client.Do(request)
 		if err == nil {
 			defer resp.Body.Close()

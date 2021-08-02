@@ -23,7 +23,7 @@ func SendMessage(text, desp string) bool {
 		body, _ := ioutil.ReadAll(resp.Body)
 		res := make(map[string]interface{})
 		json.Unmarshal(body, &res)
-		if res["errno"].(float64) == 0 {
+		if res["code"].(float64) == 0 {
 			return true
 		}
 	}

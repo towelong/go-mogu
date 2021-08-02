@@ -25,9 +25,9 @@ func WeeklyPicker(end time.Time) (int, string, string) {
 	startWeekTime := "2020-11-30"
 	start, _ := time.Parse("2006-01-02", startWeekTime)
 	currentWeek := int(end.Sub(start).Hours())/24/7 + 1
-	weekDay, _ := WeekDay[end.Weekday().String()]
-	weekDay2, _ := WeekDay[end.Weekday().String()]
-	fmt.Println(fmt.Sprintf("当前为第%v周的第%v天", currentWeek, weekDay))
+	weekDay := WeekDay[end.Weekday().String()]
+	weekDay2 := WeekDay[end.Weekday().String()]
+	fmt.Printf("当前为第%v周的第%v天\n", currentWeek, weekDay)
 	// 计算离星期天还有几天
 	last := 0
 	for {
@@ -51,6 +51,6 @@ func WeeklyPicker(end time.Time) (int, string, string) {
 
 	mondayTime := end.Add(firstDay).Format("2006-01-02") + " 00:00:00"
 	sundayTime := end.Add(lastDay).Format("2006-01-02") + " 23:59:59"
-	fmt.Println(fmt.Sprintf("第%v周的第一天为%v\n第七天为%v", currentWeek, mondayTime, sundayTime))
+	fmt.Printf("第%v周的第一天为%v\n第七天为%v\n", currentWeek, mondayTime, sundayTime)
 	return currentWeek, mondayTime, sundayTime
 }

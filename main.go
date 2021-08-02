@@ -14,9 +14,9 @@ func main() {
 	// load enviroment secret key
 	godotenv.Load()
 	moguding := service.NewMoGuService()
-	token := moguding.MoGuLogin(os.Getenv("ACCOUNT"), os.Getenv("PASSWORD"))
-	planID := moguding.GetPlanID(token)
-	isSuccess, types := moguding.SignIn(token, planID)
+	token, userId := moguding.MoGuLogin(os.Getenv("ACCOUNT"), os.Getenv("PASSWORD"))
+	planID := moguding.GetPlanID(token, userId)
+	isSuccess, types := moguding.SignIn(token, planID, userId)
 	title, message := utils.EnumToMsg(types)
 	if !isSuccess {
 		service.SendMessage(title, message)

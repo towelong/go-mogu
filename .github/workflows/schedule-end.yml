@@ -1,6 +1,7 @@
 name: schedule-end
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: "25 10 * * *"
 
